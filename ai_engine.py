@@ -7,7 +7,7 @@ client = genai.Client(
 )
 
 
-def ask_ai(prompt, model="gemini-2.5-flash"):
+def ask_ai(prompt, model="gemini-2.0-flash"):
 
     try:
 
