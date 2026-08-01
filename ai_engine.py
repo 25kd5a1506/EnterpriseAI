@@ -1,56 +1,22 @@
-import requests
+import os
+from google import genai
 
 
-OLLAMA_URL = "http://localhost:11434/api/generate"
+client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY")
+)
 
 
-def ask_ai(prompt, model="qwen2.5:7b"):
+def ask_ai(prompt, model="gemini-2.5-flash"):
 
     try:
 
-        response = requests.post(
-
-            OLLAMA_URL,
-
-            json={
-
-                "model": model,
-
-                "prompt": prompt,
-
-                "stream": False,
-
-                "options": {
-
-                    "temperature": 0,
-
-                    "top_p": 0.5,
-
-                    "top_k": 20,
-
-                    "num_predict": 100
-
-                },
-
-                "keep_alive": "10m"
-
-            },
-
-            timeout=120
-
+        response = client.models.generate_content(
+            model=model,
+            contents=prompt
         )
 
-
-        response.raise_for_status()
-
-
-        result = response.json()
-
-
-        return result.get(
-            "response",
-            "No response"
-        ).strip()
+        return response.text.strip()
 
 
     except Exception as e:
