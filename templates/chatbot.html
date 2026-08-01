@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>EnterpriseAI Chatbot</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI",Arial,sans-serif;
+}
+
+
+body{
+
+    height:100vh;
+    background:
+    linear-gradient(135deg,#020617,#0f172a,#1e3a8a);
+
+    color:white;
+
+}
+
+
+/* Header */
+
+.header{
+
+    height:80px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 40px;
+
+    background:rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(15px);
+
+}
+
+
+
+.logo{
+
+    font-size:28px;
+    font-weight:800;
+
+}
+
+
+.logo span{
+
+    color:#00eaff;
+
+}
+
+
+
+.back{
+
+    text-decoration:none;
+    color:white;
+    padding:10px 22px;
+    border-radius:25px;
+
+    background:#2563eb;
+
+}
+
+
+
+/* Main Layout */
+
+.main{
+
+    display:flex;
+    height:calc(100vh - 80px);
+
+}
+
+
+/* AI Panel */
+
+
+.ai-panel{
+
+    width:30%;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:
+    rgba(255,255,255,0.05);
+
+    border-right:1px solid rgba(255,255,255,0.15);
+
+}
+
+
+.robot{
+
+    font-size:100px;
+
+    animation:float 3s infinite;
+
+}
+
+
+@keyframes float{
+
+50%{
+transform:translateY(-15px);
+}
+
+}
+
+
+
+.ai-panel h2{
+
+    color:#00eaff;
+
+    margin:20px;
+
+}
+
+
+
+.status{
+
+    background:#16a34a;
+
+    padding:8px 20px;
+
+    border-radius:20px;
+
+}
+
+
+
+
+/* Chat Area */
+
+
+.chat-area{
+
+    width:70%;
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+
+
+.messages{
+
+    flex:1;
+
+    padding:30px;
+
+    overflow-y:auto;
+
+}
+
+
+
+.message{
+
+    max-width:70%;
+
+    padding:15px 20px;
+
+    border-radius:20px;
+
+    margin-bottom:20px;
+
+    line-height:1.5;
+
+}
+
+
+
+.user{
+
+    margin-left:auto;
+
+    background:#2563eb;
+
+}
+
+
+
+.ai{
+
+    background:
+    rgba(255,255,255,0.12);
+
+}
+
+
+
+
+
+/* Input */
+
+
+.input-box{
+
+    display:flex;
+
+    padding:20px;
+
+    gap:15px;
+
+}
+
+
+
+input{
+
+    flex:1;
+
+    padding:15px;
+
+    border-radius:30px;
+
+    border:none;
+
+    outline:none;
+
+    font-size:16px;
+
+}
+
+
+
+button{
+
+    width:120px;
+
+    border:none;
+
+    border-radius:30px;
+
+    background:#00eaff;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+}
+
+
+
+button:hover{
+
+    background:white;
+
+}
+
+
+
+</style>
+
+
+</head>
+
+
+
+<body>
+
+
+
+<div class="header">
+
+
+<div class="logo">
+
+🤖 Enterprise<span>AI</span>
+
+</div>
+
+
+<a class="back" href="/dashboard">
+
+Dashboard
+
+</a>
+
+
+</div>
+
+
+
+
+<div class="main">
+
+
+<div class="ai-panel">
+
+
+<div class="robot">
+
+🤖
+
+</div>
+
+
+<h2>
+
+AI Assistant
+
+</h2>
+
+
+<div class="status">
+
+Online
+
+</div>
+
+
+<p style="margin-top:20px;color:#ccc">
+
+Powered by Qwen 2.5
+
+</p>
+
+
+</div>
+
+
+
+
+
+<div class="chat-area">
+
+
+<div class="messages" id="messages">
+
+
+<div class="message ai">
+
+👋 Hello {{ username }}!<br>
+I am your EnterpriseAI assistant.<br>
+How can I help you today?
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="input-box">
+
+
+<input 
+id="message"
+placeholder="Ask something...">
+
+
+<button onclick="sendMessage()">
+
+Send 🚀
+
+</button>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<script>
+
+
+async function sendMessage(){
+
+
+let input=document.getElementById("message");
+
+let text=input.value;
+
+
+if(text=="") return;
+
+
+
+let box=document.getElementById("messages");
+
+
+
+box.innerHTML += `
+
+<div class="message user">
+
+${text}
+
+</div>
+
+`;
+
+
+
+input.value="";
+
+
+let response=await fetch("/chat",{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+body:JSON.stringify({
+
+message:text
+
+})
+
+});
+
+
+
+let data=await response.json();
+
+
+
+box.innerHTML += `
+
+<div class="message ai">
+
+🤖 ${data.reply}
+
+</div>
+
+`;
+
+
+
+box.scrollTop=box.scrollHeight;
+
+
+}
+
+
+
+</script>
+
+
+
+</body>
+
+</html>

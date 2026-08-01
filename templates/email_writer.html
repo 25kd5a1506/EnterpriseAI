@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>EnterpriseAI Mail Assistant</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:"Segoe UI",Arial,sans-serif;
+}
+
+
+body{
+
+min-height:100vh;
+background:
+linear-gradient(135deg,#020617,#172554);
+
+color:white;
+
+}
+
+
+/* Header */
+
+.header{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+padding:25px 50px;
+
+background:rgba(255,255,255,0.08);
+
+backdrop-filter:blur(20px);
+
+}
+
+
+.logo{
+
+font-size:32px;
+font-weight:800;
+
+}
+
+
+.logo span{
+
+color:#00eaff;
+
+}
+
+
+.back{
+
+text-decoration:none;
+color:white;
+
+background:#2563eb;
+
+padding:12px 25px;
+
+border-radius:30px;
+
+}
+
+
+
+/* Title */
+
+.title{
+
+text-align:center;
+
+padding:30px;
+
+}
+
+
+.title h1{
+
+font-size:42px;
+color:#00eaff;
+
+}
+
+
+.title p{
+
+color:#cbd5e1;
+
+margin-top:10px;
+
+}
+
+
+
+
+/* Layout */
+
+.workspace{
+
+display:grid;
+
+grid-template-columns:380px 1fr;
+
+gap:30px;
+
+padding:30px 60px;
+
+}
+
+
+
+/* Panels */
+
+
+.panel{
+
+background:
+
+rgba(255,255,255,0.1);
+
+backdrop-filter:blur(20px);
+
+border-radius:25px;
+
+padding:30px;
+
+border:1px solid rgba(255,255,255,0.15);
+
+}
+
+
+
+.panel h2{
+
+color:#00eaff;
+
+margin-bottom:20px;
+
+}
+
+
+
+
+label{
+
+display:block;
+
+margin-top:15px;
+
+color:#e2e8f0;
+
+}
+
+
+
+input,select,textarea{
+
+width:100%;
+
+padding:14px;
+
+margin-top:8px;
+
+border:none;
+
+outline:none;
+
+border-radius:12px;
+
+font-size:15px;
+
+}
+
+
+textarea{
+
+height:150px;
+
+resize:none;
+
+}
+
+
+
+button{
+
+margin-top:20px;
+
+padding:14px 30px;
+
+border:none;
+
+border-radius:30px;
+
+background:#00eaff;
+
+font-weight:bold;
+
+cursor:pointer;
+
+}
+
+
+button:hover{
+
+background:white;
+
+}
+
+
+
+
+/* Preview */
+
+
+.email-preview{
+
+background:rgba(0,0,0,0.25);
+
+padding:25px;
+
+border-radius:15px;
+
+min-height:350px;
+
+white-space:pre-line;
+
+color:#e2e8f0;
+
+}
+
+
+
+.copy{
+
+background:#16a34a;
+
+color:white;
+
+}
+
+
+
+
+@media(max-width:900px){
+
+.workspace{
+
+grid-template-columns:1fr;
+
+}
+
+}
+
+</style>
+
+</head>
+
+
+
+<body>
+
+
+
+<div class="header">
+
+
+<div class="logo">
+
+📧 Enterprise<span>AI</span>
+
+</div>
+
+
+<a class="back" href="/dashboard">
+
+Dashboard
+
+</a>
+
+
+</div>
+
+
+
+
+
+<div class="title">
+
+<h1>
+AI Mail Assistant
+</h1>
+
+<p>
+Create professional emails with artificial intelligence
+</p>
+
+</div>
+
+
+
+
+
+<div class="workspace">
+
+
+
+
+
+<div class="panel">
+
+
+<h2>
+✍️ Email Settings
+</h2>
+
+
+
+<label>
+To (Receiver)
+</label>
+
+<input 
+id="receiver"
+placeholder="HR Manager / Client / Professor">
+
+
+
+
+
+<label>
+Email Type
+</label>
+
+
+<select id="type">
+
+<option>Leave Request</option>
+
+<option>Job Application</option>
+
+<option>Meeting Request</option>
+
+<option>Complaint</option>
+
+<option>Thank You</option>
+
+<option>Official Notice</option>
+
+<option>Custom</option>
+
+</select>
+
+
+
+
+<label>
+Tone
+</label>
+
+
+<select id="tone">
+
+<option>Professional</option>
+
+<option>Formal</option>
+
+<option>Friendly</option>
+
+<option>Apology</option>
+
+</select>
+
+
+
+
+<label>
+Message Details
+</label>
+
+
+<textarea 
+id="details"
+placeholder="Explain your requirement..."></textarea>
+
+
+
+
+
+<button onclick="generateEmail()">
+
+🚀 Generate Email
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="panel">
+
+
+<h2>
+🤖 AI Email Preview
+</h2>
+
+
+<div class="email-preview" id="result">
+
+Your generated email will appear here...
+
+</div>
+
+
+
+<button class="copy" onclick="copyEmail()">
+
+📋 Copy Email
+
+</button>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<script>
+
+
+async function generateEmail(){
+
+
+let result=document.getElementById("result");
+
+
+result.innerHTML="⏳ AI is writing your email...";
+
+
+
+let response=await fetch("/generate-email",{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+
+body:JSON.stringify({
+
+
+receiver:
+document.getElementById("receiver").value,
+
+
+purpose:
+document.getElementById("type").value
++
+" with "
++
+document.getElementById("tone").value
++
+" tone",
+
+
+details:
+document.getElementById("details").value
+
+
+})
+
+
+});
+
+
+
+let data=await response.json();
+
+
+
+result.innerHTML=data.email;
+
+
+}
+
+
+
+
+
+function copyEmail(){
+
+
+let text=document.getElementById("result").innerText;
+
+
+navigator.clipboard.writeText(text);
+
+
+alert("Email copied!");
+
+}
+
+
+
+</script>
+
+
+</body>
+
+</html>

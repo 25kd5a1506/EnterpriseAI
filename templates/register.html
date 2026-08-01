@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>EnterpriseAI Register</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:"Segoe UI",Arial,sans-serif;
+}
+
+body{
+
+height:100vh;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+background:#020617;
+
+color:white;
+
+}
+
+.register-card{
+
+width:400px;
+
+background:#111827;
+
+border:1px solid #334155;
+
+border-radius:22px;
+
+padding:35px;
+
+box-shadow:0 20px 40px rgba(0,0,0,0.4);
+
+}
+
+.ai-icon{
+
+text-align:center;
+
+font-size:45px;
+
+margin-bottom:10px;
+
+}
+
+.logo{
+
+text-align:center;
+
+font-size:32px;
+
+font-weight:800;
+
+}
+
+.logo span{
+
+color:#3b82f6;
+
+}
+
+.subtitle{
+
+text-align:center;
+
+color:#94a3b8;
+
+margin:10px 0 25px;
+
+}
+
+label{
+
+display:block;
+
+margin-bottom:7px;
+
+color:#cbd5e1;
+
+}
+
+input{
+
+width:100%;
+
+padding:13px;
+
+margin-bottom:18px;
+
+background:#020617;
+
+color:white;
+
+border:1px solid #334155;
+
+border-radius:12px;
+
+font-size:15px;
+
+}
+
+input:focus{
+
+outline:none;
+
+border-color:#3b82f6;
+
+}
+
+button{
+
+width:100%;
+
+padding:13px;
+
+border:none;
+
+border-radius:25px;
+
+background:#2563eb;
+
+color:white;
+
+font-size:16px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+}
+
+button:hover{
+
+background:#3b82f6;
+
+}
+
+.login{
+
+text-align:center;
+
+margin-top:20px;
+
+color:#94a3b8;
+
+}
+
+.login a{
+
+color:#60a5fa;
+
+text-decoration:none;
+
+}
+
+.error-box{
+
+background:#450a0a;
+
+border:1px solid #ef4444;
+
+color:#fecaca;
+
+padding:12px;
+
+border-radius:10px;
+
+margin-bottom:20px;
+
+text-align:center;
+
+}
+
+.success-box{
+
+background:#052e16;
+
+border:1px solid #22c55e;
+
+color:#bbf7d0;
+
+padding:12px;
+
+border-radius:10px;
+
+margin-bottom:20px;
+
+text-align:center;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="register-card">
+
+<div class="ai-icon">
+🤖
+</div>
+
+<div class="logo">
+Enterprise<span>AI</span>
+</div>
+
+<div class="subtitle">
+Create your AI Workspace Account
+</div>
+
+{% if error %}
+<div class="error-box">
+⚠️ {{ error }}
+</div>
+{% endif %}
+
+{% if success %}
+<div class="success-box">
+✅ {{ success }}
+</div>
+{% endif %}
+
+<form method="POST">
+
+<label>
+Full Name
+</label>
+
+<input
+type="text"
+name="fullname"
+placeholder="Enter full name"
+required>
+
+<label>
+Username
+</label>
+
+<input
+type="text"
+name="username"
+placeholder="Enter username"
+required>
+
+<label>
+Email
+</label>
+
+<input
+type="email"
+name="email"
+placeholder="Enter email"
+required>
+
+<label>
+Password
+</label>
+
+<input
+type="password"
+name="password"
+placeholder="Create password"
+required>
+
+<button type="submit">
+🚀 Create Account
+</button>
+
+</form>
+
+<div class="login">
+
+Already have an account?
+
+<a href="{{ url_for('login') }}">
+Login
+</a>
+
+</div>
+
+</div>
+
+</body>
+
+</html>

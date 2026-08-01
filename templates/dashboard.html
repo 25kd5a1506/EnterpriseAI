@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>EnterpriseAI Command Center</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI",Arial,sans-serif;
+}
+
+
+body{
+
+    min-height:100vh;
+    background:
+    linear-gradient(135deg,#050816,#0b1d3a,#020617);
+
+    color:white;
+}
+
+
+/* Top Navbar */
+
+.navbar{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:25px 50px;
+
+}
+
+
+.brand{
+
+    font-size:32px;
+    font-weight:800;
+
+}
+
+
+.brand span{
+
+    color:#00eaff;
+
+}
+
+
+
+.status{
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    background:rgba(255,255,255,0.08);
+    padding:12px 20px;
+    border-radius:30px;
+
+}
+
+
+
+.dot{
+
+    width:12px;
+    height:12px;
+    background:#00ff88;
+    border-radius:50%;
+
+}
+
+
+
+.logout{
+
+    margin-left:20px;
+    text-decoration:none;
+    color:white;
+
+    padding:12px 25px;
+
+    border-radius:30px;
+
+    background:
+    linear-gradient(135deg,#00eaff,#0072ff);
+
+}
+
+
+
+/* Hero */
+
+
+.hero{
+
+    text-align:center;
+    padding:30px;
+
+}
+
+
+.hero h1{
+
+    font-size:45px;
+
+}
+
+
+
+.hero p{
+
+    margin-top:15px;
+    color:#b8c7e0;
+    font-size:20px;
+
+}
+
+
+
+/* Profile */
+
+
+.profile{
+
+    width:85%;
+    margin:20px auto;
+
+    display:flex;
+    justify-content:space-around;
+    flex-wrap:wrap;
+
+    background:
+    rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(20px);
+
+    border-radius:25px;
+
+    padding:25px;
+
+}
+
+
+
+.box{
+
+    text-align:center;
+    padding:20px;
+
+}
+
+
+
+.box h2{
+
+    color:#00eaff;
+
+    font-size:30px;
+
+}
+
+
+
+.box p{
+
+    color:#ccc;
+
+}
+
+
+
+/* Cards */
+
+
+.container{
+
+    width:90%;
+    margin:auto;
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(260px,1fr));
+
+    gap:30px;
+
+    padding:40px 0;
+
+}
+
+
+
+.card{
+
+
+    background:
+    rgba(255,255,255,0.09);
+
+
+    backdrop-filter:blur(15px);
+
+
+    border-radius:25px;
+
+
+    padding:35px;
+
+
+    text-align:center;
+
+
+    border:1px solid rgba(255,255,255,0.15);
+
+
+    transition:.4s;
+
+
+}
+
+
+
+.card:hover{
+
+
+    transform:translateY(-15px);
+
+
+    box-shadow:
+    0 0 35px #00eaff;
+
+
+}
+
+
+
+.card a{
+
+    text-decoration:none;
+
+    color:white;
+
+}
+
+
+
+.icon{
+
+    font-size:60px;
+
+    margin-bottom:20px;
+
+}
+
+
+
+.card h2{
+
+    color:#00eaff;
+
+    margin-bottom:12px;
+
+}
+
+
+
+.card p{
+
+    color:#cbd5e1;
+
+}
+
+
+
+/* Footer */
+
+
+.footer{
+
+    text-align:center;
+
+    padding:30px;
+
+    color:#94a3b8;
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+
+<div class="navbar">
+
+
+<div class="brand">
+
+🤖 Enterprise<span>AI</span>
+
+</div>
+
+
+<div style="display:flex;">
+
+
+<div class="status">
+
+<div class="dot"></div>
+
+AI System Online
+
+</div>
+
+
+<a class="logout" href="/logout">
+
+Logout
+
+</a>
+
+
+</div>
+
+
+</div>
+
+
+
+
+<div class="hero">
+
+
+<h1>
+Welcome {{ username }} 👋
+</h1>
+
+
+<p>
+Your Personal AI Command Center
+</p>
+
+
+</div>
+
+
+
+
+<div class="profile">
+
+
+<div class="box">
+
+<h2>Qwen 2.5</h2>
+
+<p>Local AI Model</p>
+
+</div>
+
+
+<div class="box">
+
+<h2>6</h2>
+
+<p>AI Modules</p>
+
+</div>
+
+
+<div class="box">
+
+<h2>24/7</h2>
+
+<p>Availability</p>
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="container">
+
+
+<div class="card">
+
+<a href="/chatbot">
+
+<div class="icon">🤖</div>
+
+<h2>AI Chatbot</h2>
+
+<p>Intelligent AI conversations</p>
+
+</a>
+
+</div>
+
+
+
+<div class="card">
+
+<a href="/email-writer">
+
+<div class="icon">📧</div>
+
+<h2>Email AI</h2>
+
+<p>Professional email generation</p>
+
+</a>
+
+</div>
+
+
+
+<div class="card">
+
+<a href="/coding">
+
+<div class="icon">💻</div>
+
+<h2>Coding AI</h2>
+
+<p>Programming assistant</p>
+
+</a>
+
+</div>
+
+
+
+<div class="card">
+
+<a href="/document-generator">
+
+<div class="icon">📄</div>
+
+<h2>Document AI</h2>
+
+<p>Create smart documents</p>
+
+</a>
+
+</div>
+
+
+
+<div class="card">
+
+<a href="/translator">
+
+<div class="icon">🌍</div>
+
+<h2>Translator AI</h2>
+
+<p>Multi language AI</p>
+
+</a>
+
+</div>
+
+
+
+<div class="card">
+
+<a href="/data-analysis">
+
+<div class="icon">📊</div>
+
+<h2>Analytics AI</h2>
+
+<p>Data insights engine</p>
+
+</a>
+
+</div>
+
+
+</div>
+
+
+
+<div class="footer">
+
+EnterpriseAI © 2026 | Powered by Ollama Local Intelligence
+
+</div>
+
+
+
+</body>
+
+</html>

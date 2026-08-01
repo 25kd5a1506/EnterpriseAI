@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>EnterpriseAI Document Studio</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:"Segoe UI",Arial,sans-serif;
+}
+
+body{
+
+height:100vh;
+background:#020617;
+color:white;
+
+}
+
+
+/* Header */
+
+.header{
+
+height:75px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+padding:0 35px;
+
+background:#111827;
+
+border-bottom:1px solid #334155;
+
+}
+
+
+.logo{
+
+font-size:28px;
+font-weight:800;
+
+}
+
+
+.logo span{
+
+color:#3b82f6;
+
+}
+
+
+.dashboard{
+
+text-decoration:none;
+color:white;
+
+background:#2563eb;
+
+padding:10px 22px;
+
+border-radius:20px;
+
+}
+
+
+
+/* Main Layout */
+
+.app{
+
+display:flex;
+
+height:calc(100vh - 75px);
+
+}
+
+
+
+/* Sidebar */
+
+.sidebar{
+
+width:260px;
+
+background:#111827;
+
+padding:25px;
+
+border-right:1px solid #334155;
+
+}
+
+
+.sidebar h2{
+
+color:#60a5fa;
+
+margin-bottom:20px;
+
+}
+
+
+.template{
+
+background:#1e293b;
+
+padding:15px;
+
+margin-bottom:12px;
+
+border-radius:12px;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+
+.template:hover,
+.template.active{
+
+background:#2563eb;
+
+transform:translateX(5px);
+
+}
+
+
+
+/* Workspace */
+
+
+.workspace{
+
+flex:1;
+
+padding:30px;
+
+display:grid;
+
+grid-template-columns:380px 1fr;
+
+gap:30px;
+
+}
+
+
+
+/* Input Card */
+
+
+.card{
+
+background:#111827;
+
+border-radius:20px;
+
+padding:25px;
+
+border:1px solid #334155;
+
+}
+
+
+.card h3{
+
+color:#60a5fa;
+
+margin-bottom:20px;
+
+}
+
+
+
+input,textarea{
+
+width:100%;
+
+background:#020617;
+
+color:white;
+
+border:1px solid #334155;
+
+padding:14px;
+
+border-radius:10px;
+
+margin-bottom:15px;
+
+outline:none;
+
+}
+
+
+
+textarea{
+
+height:160px;
+
+resize:none;
+
+}
+
+
+
+.generate{
+
+width:100%;
+
+padding:14px;
+
+border:none;
+
+border-radius:25px;
+
+background:#2563eb;
+
+color:white;
+
+font-weight:bold;
+
+cursor:pointer;
+
+}
+
+
+.generate:hover{
+
+background:#3b82f6;
+
+}
+
+
+
+/* Preview */
+
+.preview{
+
+background:#e5e7eb;
+
+padding:35px;
+
+border-radius:20px;
+
+height:650px;
+
+overflow:auto;
+
+}
+
+
+
+.paper{
+
+background:white;
+
+color:#111827;
+
+min-height:570px;
+
+padding:45px;
+
+border-radius:8px;
+
+box-shadow:0 10px 40px rgba(0,0,0,.3);
+
+white-space:pre-line;
+
+}
+
+
+
+.paper h2{
+
+text-align:center;
+
+color:#2563eb;
+
+}
+
+
+
+.copy{
+
+margin-top:15px;
+
+padding:12px 25px;
+
+border:none;
+
+border-radius:20px;
+
+background:#16a34a;
+
+color:white;
+
+cursor:pointer;
+
+}
+
+
+
+@media(max-width:900px){
+
+.workspace{
+
+grid-template-columns:1fr;
+
+}
+
+.sidebar{
+
+display:none;
+
+}
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+
+<div class="header">
+
+
+<div class="logo">
+
+📄 Enterprise<span>AI</span> Studio
+
+</div>
+
+
+<a href="/dashboard" class="dashboard">
+
+Dashboard
+
+</a>
+
+
+</div>
+
+
+
+
+
+<div class="app">
+
+
+
+
+
+<div class="sidebar">
+
+
+<h2>
+Templates
+</h2>
+
+
+<div class="template" onclick="selectTemplate(this,'Report')">
+
+📑 Business Report
+
+</div>
+
+
+<div class="template" onclick="selectTemplate(this,'Resume')">
+
+👤 Resume
+
+</div>
+
+
+<div class="template" onclick="selectTemplate(this,'Proposal')">
+
+💼 Proposal
+
+</div>
+
+
+<div class="template" onclick="selectTemplate(this,'Assignment')">
+
+🎓 Assignment
+
+</div>
+
+
+<div class="template" onclick="selectTemplate(this,'Letter')">
+
+✉️ Letter
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="workspace">
+
+
+
+
+
+<div class="card">
+
+
+<h3>
+
+✍️ AI Writer
+
+</h3>
+
+
+
+<input id="title"
+
+placeholder="Document Title">
+
+
+
+<textarea id="details"
+
+placeholder="Enter document requirements..."></textarea>
+
+
+
+
+<button class="generate" onclick="generateDocument()">
+
+✨ Generate AI Document
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+
+<div>
+
+
+<div class="preview">
+
+
+<div class="paper" id="result">
+
+
+<h2>
+
+AI Document Preview
+
+</h2>
+
+
+<br>
+
+
+Select a template and generate document...
+
+</div>
+
+
+</div>
+
+
+
+<button class="copy" onclick="copyDocument()">
+
+📋 Copy Document
+
+</button>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<script>
+
+
+let type="Report";
+
+
+
+function selectTemplate(element,template){
+
+
+type=template;
+
+
+
+document.querySelectorAll(".template")
+.forEach(item=>{
+
+item.classList.remove("active");
+
+});
+
+
+element.classList.add("active");
+
+
+
+document.getElementById("title").value =
+template + " Document";
+
+
+
+document.getElementById("details").value =
+
+"Create a professional " 
++ template +
+" document with proper headings, detailed explanation and conclusion.";
+
+
+}
+
+
+
+
+
+async function generateDocument(){
+
+
+let result=document.getElementById("result");
+
+
+result.innerHTML="⏳ AI is creating document...";
+
+
+
+let response = await fetch("/generate-document",{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+body:JSON.stringify({
+
+
+topic:
+document.getElementById("title").value,
+
+
+type:type,
+
+
+details:
+document.getElementById("details").value
+
+
+})
+
+
+});
+
+
+
+let data=await response.json();
+
+
+
+result.innerHTML=data.document;
+
+
+}
+
+
+
+
+
+function copyDocument(){
+
+
+let text=document.getElementById("result").innerText;
+
+
+navigator.clipboard.writeText(text);
+
+
+alert("Document copied!");
+
+}
+
+
+
+</script>
+
+
+
+</body>
+
+</html>
