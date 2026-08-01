@@ -4,3 +4,4 @@ python-dotenv
 Werkzeug
 google-genai
 gunicorn
+groq

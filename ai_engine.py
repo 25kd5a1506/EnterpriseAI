@@ -1,22 +1,28 @@
 import os
-from google import genai
+from groq import Groq
 
 
-client = genai.Client(
-    api_key=os.getenv("GEMINI_API_KEY")
+client = Groq(
+    api_key=os.getenv("GROQ_API_KEY")
 )
 
 
-def ask_ai(prompt, model="gemini-2.0-flash"):
+def ask_ai(prompt, model="llama-3.3-70b-versatile"):
 
     try:
 
-        response = client.models.generate_content(
+        response = client.chat.completions.create(
             model=model,
-            contents=prompt
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            temperature=0.5
         )
 
-        return response.text.strip()
+        return response.choices[0].message.content.strip()
 
 
     except Exception as e:
