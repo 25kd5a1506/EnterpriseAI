@@ -20,9 +20,10 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
 
+with app.app_context():
+    db.create_all()
 
-
-# ================= LOGIN =================
+# ================= LOGIN =================app
 
 @app.route("/", methods=["GET", "POST"])
 def login():
