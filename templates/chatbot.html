@@ -206,8 +206,9 @@ transform:translateY(-15px);
 
 .ai{
 
-    background:
-    rgba(255,255,255,0.12);
+    background:rgba(255,255,255,0.12);
+
+    white-space:pre-wrap;
 
 }
 
@@ -462,7 +463,7 @@ async function sendMessage(){
 
       let aiMsg = document.createElement("div");
 
-aiMsg.className = "message ai";
+ aiMsg.className = "message ai";
 
 box.appendChild(aiMsg);
 
@@ -476,7 +477,7 @@ function typeWriter(){
 
     if(index < reply.length){
 
-        aiMsg.innerText += reply.charAt(index);
+        aiMsg.textContent += reply.charAt(index);
 
         index++;
 
