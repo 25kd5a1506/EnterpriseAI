@@ -503,7 +503,25 @@ function typeWriter(){
 }
 
 typeWriter();
+let copyBtn = document.createElement("button");
 
+copyBtn.innerText = "📋 Copy";
+
+copyBtn.style.marginTop = "8px";
+
+copyBtn.onclick = function(){
+
+    navigator.clipboard.writeText(data.reply);
+
+    copyBtn.innerText = "✅ Copied";
+
+    setTimeout(()=>{
+        copyBtn.innerText = "📋 Copy";
+    },2000);
+
+};
+
+box.appendChild(copyBtn);
     }
     catch(error){
 
