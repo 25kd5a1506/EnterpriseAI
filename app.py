@@ -14,7 +14,9 @@ app.secret_key = os.getenv("SECRET_KEY")
 
 AI_MODEL = os.getenv("AI_MODEL")
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///enterpriseai.db"
+database_url = os.getenv("DATABASE_URL")
+
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 

@@ -43,7 +43,6 @@ body{
 }
 
 
-
 .logo{
 
     font-size:28px;
@@ -73,18 +72,19 @@ body{
 
 
 
-/* Main Layout */
+/* Main */
 
 .main{
 
     display:flex;
+
     height:calc(100vh - 80px);
 
 }
 
 
-/* AI Panel */
 
+/* AI Panel */
 
 .ai-panel{
 
@@ -106,6 +106,7 @@ body{
 }
 
 
+
 .robot{
 
     font-size:100px;
@@ -115,10 +116,13 @@ body{
 }
 
 
+
 @keyframes float{
 
 50%{
+
 transform:translateY(-15px);
+
 }
 
 }
@@ -144,7 +148,6 @@ transform:translateY(-15px);
     border-radius:20px;
 
 }
-
 
 
 
@@ -210,8 +213,6 @@ transform:translateY(-15px);
 
 
 
-
-
 /* Input */
 
 
@@ -270,16 +271,13 @@ button:hover{
 }
 
 
-
 </style>
 
 
 </head>
 
 
-
 <body>
-
 
 
 <div class="header">
@@ -300,8 +298,6 @@ Dashboard
 
 
 </div>
-
-
 
 
 <div class="main">
@@ -341,9 +337,6 @@ Powered by Qwen 2.5
 </div>
 
 
-
-
-
 <div class="chat-area">
 
 
@@ -353,7 +346,9 @@ Powered by Qwen 2.5
 <div class="message ai">
 
 👋 Hello {{ username }}!<br>
+
 I am your EnterpriseAI assistant.<br>
+
 How can I help you today?
 
 </div>
@@ -363,14 +358,16 @@ How can I help you today?
 
 
 
-
-
 <div class="input-box">
 
 
-<input 
+<input
+
 id="message"
-placeholder="Ask something...">
+
+placeholder="Ask something..."
+
+onkeyup="checkEnter(event)">
 
 
 <button onclick="sendMessage()">
@@ -381,7 +378,6 @@ Send 🚀
 
 
 </div>
-
 
 
 </div>
@@ -396,84 +392,105 @@ Send 🚀
 <script>
 
 
-async function sendMessage(){
+function checkEnter(event){
 
 
-let input=document.getElementById("message");
-
-let text=input.value;
+    if(event.key === "Enter"){
 
 
-if(text=="") return;
+        sendMessage();
 
 
-
-let box=document.getElementById("messages");
-
-
-
-box.innerHTML += `
-
-<div class="message user">
-
-${text}
-
-</div>
-
-`;
-
-
-
-input.value="";
-
-
-let response=await fetch("/chat",{
-
-method:"POST",
-
-headers:{
-
-"Content-Type":"application/json"
-
-},
-
-body:JSON.stringify({
-
-message:text
-
-})
-
-});
-
-
-
-let data=await response.json();
-
-
-
-box.innerHTML += `
-
-<div class="message ai">
-
-🤖 ${data.reply}
-
-</div>
-
-`;
-
-
-
-box.scrollTop=box.scrollHeight;
+    }
 
 
 }
 
 
 
-</script>
 
 
+async function sendMessage(){
 
-</body>
+let input=document.getElementById("message");
 
-</html>
+let text=input.value.trim();
+
+if(text=="") return;
+
+
+let box=document.getElementById("messages");
+
+
+// user message
+let userMsg=document.createElement("div");
+userMsg.className="message user";
+userMsg.innerText=text;
+box.appendChild(userMsg);
+
+
+input.value="";
+
+
+// loading
+let loading=document.createElement("div");
+loading.className="message ai";
+loading.id="loading";
+loading.innerText="🤖 Thinking...";
+box.appendChild(loading);
+
+
+box.scrollTop=box.scrollHeight;
+
+
+try{
+
+let response=await fetch("/chat",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+message:text
+})
+
+});
+
+
+let data=await response.json();
+
+
+document.getElementById("loading").remove();
+
+
+let aiMsg=document.createElement("div");
+
+aiMsg.className="message ai";
+
+aiMsg.innerText="🤖 "+data.reply;
+
+box.appendChild(aiMsg);
+
+
+}
+catch(error){
+
+document.getElementById("loading").remove();
+
+let err=document.createElement("div");
+
+err.className="message ai";
+
+err.innerText="❌ AI Error";
+
+box.appendChild(err);
+
+}
+
+
+box.scrollTop=box.scrollHeight;
+
+}
