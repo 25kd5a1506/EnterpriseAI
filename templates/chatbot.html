@@ -361,11 +361,10 @@ How can I help you today?
 <div class="input-box">
 
 
-<input
-
+<input 
 id="message"
-
 placeholder="Ask something..."
+onkeypress="if(event.key === 'Enter') sendMessage()">
 
 onkeyup="checkEnter(event)">
 
