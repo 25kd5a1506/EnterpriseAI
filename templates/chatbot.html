@@ -273,6 +273,8 @@ button:hover{
 
 
 </style>
+ 
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
 
 </head>
@@ -461,37 +463,36 @@ async function sendMessage(){
 
 
 
-      let aiMsg = document.createElement("div");
+     let aiMsg = document.createElement("div");
 
- aiMsg.className = "message ai";
+aiMsg.className = "message ai";
 
 box.appendChild(aiMsg);
-
 
 let reply = "🤖 " + data.reply;
 
 let index = 0;
-
+let currentText = "";
 
 function typeWriter(){
 
     if(index < reply.length){
 
-        aiMsg.textContent += reply.charAt(index);
+        currentText += reply.charAt(index);
+
+        aiMsg.innerHTML = marked.parse(currentText);
 
         index++;
 
         box.scrollTop = box.scrollHeight;
 
-        setTimeout(typeWriter, 30);
+        setTimeout(typeWriter, 20);
 
     }
 
 }
 
-
 typeWriter();
-
 
     }
     catch(error){
