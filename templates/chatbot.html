@@ -460,14 +460,36 @@ async function sendMessage(){
 
 
 
-        let aiMsg = document.createElement("div");
+      let aiMsg = document.createElement("div");
 
-        aiMsg.className="message ai";
+aiMsg.className = "message ai";
 
-        aiMsg.innerText="🤖 "+data.reply;
+box.appendChild(aiMsg);
 
 
-        box.appendChild(aiMsg);
+let reply = "🤖 " + data.reply;
+
+let index = 0;
+
+
+function typeWriter(){
+
+    if(index < reply.length){
+
+        aiMsg.innerText += reply.charAt(index);
+
+        index++;
+
+        box.scrollTop = box.scrollHeight;
+
+        setTimeout(typeWriter, 30);
+
+    }
+
+}
+
+
+typeWriter();
 
 
     }
