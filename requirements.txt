@@ -5,3 +5,4 @@ Werkzeug
 google-genai
 gunicorn
 groq
+psycopg2-binary
