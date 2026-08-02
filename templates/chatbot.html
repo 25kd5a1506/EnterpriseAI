@@ -347,6 +347,7 @@ Powered by EnterpriseAI Engine
 
 <div class="messages" id="messages">
 
+    <div id="chatHistory"></div>
 
 <div class="message ai">
 
@@ -485,29 +486,36 @@ let currentText = "";
 
 function typeWriter(){
 
-   if(stopTyping){
-    return;
-}
+    if(stopTyping){
+        return;
+    }
 
     if(index < reply.length){
 
         currentText += reply.charAt(index);
 
         aiMsg.innerHTML = marked.parse(currentText);
-        
+
         hljs.highlightAll();
 
         index++;
 
         box.scrollTop = box.scrollHeight;
 
-        setTimeout(typeWriter, 20);
+        setTimeout(typeWriter,20);
+
+    }
+    else{
+
+        saveChat();
 
     }
 
 }
 
 typeWriter();
+
+
 let copyBtn = document.createElement("button");
 
 copyBtn.innerText = "📋 Copy";
@@ -566,10 +574,32 @@ function checkEnter(event){
 
 }
 
+function saveChat(){
+
+    localStorage.setItem(
+        "enterprise_chat",
+        document.getElementById("messages").innerHTML
+    );
+
+}
+
+function loadChat(){
+
+    let history = localStorage.getItem("enterprise_chat");
+
+    if(history){
+
+        document.getElementById("messages").innerHTML = history;
+
+    }
+
+}
+
 function stopResponse(){
     stopTyping = true;
 }
 
+window.onload = loadChat;
 
 </script>
 
