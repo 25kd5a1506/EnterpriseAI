@@ -375,6 +375,9 @@ Send 🚀
 
 </button>
 
+<button onclick="stopResponse()">
+    Stop ⏹️
+</button>
 
 </div>
 
@@ -390,8 +393,11 @@ Send 🚀
 
 <script>
 
+let stopTyping = false;
 
 async function sendMessage(){
+    
+    stopTyping = false;
 
     let input = document.getElementById("message");
     let text = input.value.trim();
@@ -476,6 +482,10 @@ let currentText = "";
 
 function typeWriter(){
 
+   if(stopTyping){
+    return;
+}
+
     if(index < reply.length){
 
         currentText += reply.charAt(index);
@@ -533,7 +543,9 @@ function checkEnter(event){
 
 }
 
-
+function stopResponse(){
+    stopTyping = true;
+}
 
 
 </script>
