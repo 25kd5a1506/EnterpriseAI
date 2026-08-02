@@ -364,9 +364,7 @@ How can I help you today?
 <input 
 id="message"
 placeholder="Ask something..."
-onkeypress="if(event.key === 'Enter') sendMessage()">
-
-onkeyup="checkEnter(event)">
+onkeypress="checkEnter(event)">
 
 
 <button onclick="sendMessage()">
@@ -390,106 +388,62 @@ Send 🚀
 
 <script>
 
+async function sendMessage(){
+
+    let input = document.getElementById("message");
+    let text = input.value.trim();
+
+    if(text === "") return;
+
+    let box = document.getElementById("messages");
+
+
+    let userMsg = document.createElement("div");
+    userMsg.className = "message user";
+    userMsg.innerText = text;
+    box.appendChild(userMsg);
+
+
+    input.value = "";
+
+
+    let response = await fetch("/chat",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            message:text
+        })
+    });
+
+
+    let data = await response.json();
+
+
+    let aiMsg = document.createElement("div");
+    aiMsg.className="message ai";
+    aiMsg.innerText="🤖 "+data.reply;
+
+    box.appendChild(aiMsg);
+
+
+    box.scrollTop = box.scrollHeight;
+
+}
+
+
 
 function checkEnter(event){
 
-
     if(event.key === "Enter"){
-
-
         sendMessage();
-
-
     }
 
-
 }
 
 
+</script>
 
-
-
-async function sendMessage(){
-
-let input=document.getElementById("message");
-
-let text=input.value.trim();
-
-if(text=="") return;
-
-
-let box=document.getElementById("messages");
-
-
-// user message
-let userMsg=document.createElement("div");
-userMsg.className="message user";
-userMsg.innerText=text;
-box.appendChild(userMsg);
-
-
-input.value="";
-
-
-// loading
-let loading=document.createElement("div");
-loading.className="message ai";
-loading.id="loading";
-loading.innerText="🤖 Thinking...";
-box.appendChild(loading);
-
-
-box.scrollTop=box.scrollHeight;
-
-
-try{
-
-let response=await fetch("/chat",{
-
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-message:text
-})
-
-});
-
-
-let data=await response.json();
-
-
-document.getElementById("loading").remove();
-
-
-let aiMsg=document.createElement("div");
-
-aiMsg.className="message ai";
-
-aiMsg.innerText="🤖 "+data.reply;
-
-box.appendChild(aiMsg);
-
-
-}
-catch(error){
-
-document.getElementById("loading").remove();
-
-let err=document.createElement("div");
-
-err.className="message ai";
-
-err.innerText="❌ AI Error";
-
-box.appendChild(err);
-
-}
-
-
-box.scrollTop=box.scrollHeight;
-
-}
+</body>
+</html>
