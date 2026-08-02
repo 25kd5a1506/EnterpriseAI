@@ -315,7 +315,7 @@ Dashboard
 
 <h2>
 
-AI Assistant
+EnterpriseAI Assistant
 
 </h2>
 
@@ -387,6 +387,7 @@ Send 🚀
 
 <script>
 
+
 async function sendMessage(){
 
     let input = document.getElementById("message");
@@ -406,25 +407,89 @@ async function sendMessage(){
     input.value = "";
 
 
-    let response = await fetch("/chat",{
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json"
-        },
-        body:JSON.stringify({
-            message:text
-        })
-    });
+    // Typing animation
+    let loading = document.createElement("div");
+    loading.className = "message ai";
+    loading.id = "loading";
+
+    box.appendChild(loading);
 
 
-    let data = await response.json();
+    let dots = 0;
+
+    let typing = setInterval(()=>{
+
+        dots++;
+
+        if(dots > 3){
+            dots = 1;
+        }
+
+        loading.innerText = "🤖 Thinking" + ".".repeat(dots);
+
+    },400);
 
 
-    let aiMsg = document.createElement("div");
-    aiMsg.className="message ai";
-    aiMsg.innerText="🤖 "+data.reply;
 
-    box.appendChild(aiMsg);
+    box.scrollTop = box.scrollHeight;
+
+
+    try{
+
+        let response = await fetch("/chat",{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify({
+                message:text
+            })
+
+        });
+
+
+        let data = await response.json();
+
+
+        clearInterval(typing);
+
+        document.getElementById("loading").remove();
+
+
+
+        let aiMsg = document.createElement("div");
+
+        aiMsg.className="message ai";
+
+        aiMsg.innerText="🤖 "+data.reply;
+
+
+        box.appendChild(aiMsg);
+
+
+    }
+    catch(error){
+
+
+        clearInterval(typing);
+
+        document.getElementById("loading").remove();
+
+
+        let errorMsg = document.createElement("div");
+
+        errorMsg.className="message ai";
+
+        errorMsg.innerText="❌ AI connection error";
+
+
+        box.appendChild(errorMsg);
+
+    }
+
 
 
     box.scrollTop = box.scrollHeight;
@@ -433,13 +498,18 @@ async function sendMessage(){
 
 
 
+
 function checkEnter(event){
 
     if(event.key === "Enter"){
+
         sendMessage();
+
     }
 
 }
+
+
 
 
 </script>
