@@ -82,13 +82,63 @@ body{
 
 }
 
+.sidebar{
 
+    width:260px;
+
+    background:#0f172a;
+
+    border-right:1px solid rgba(255,255,255,0.1);
+
+    padding:20px;
+
+    overflow-y:auto;
+
+}
+
+#newChatBtn{
+
+    width:100%;
+
+    padding:12px;
+
+    margin-bottom:20px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#2563eb;
+
+    color:white;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+}
+
+#newChatBtn:hover{
+
+    background:#1d4ed8;
+
+}
+
+#chatList{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+}
 
 /* AI Panel */
 
 .ai-panel{
 
-    width:30%;
+    width:25%;
 
     display:flex;
 
@@ -156,7 +206,8 @@ transform:translateY(-15px);
 
 .chat-area{
 
-    width:70%;
+    width:calc(75% - 260px);
+
 
     display:flex;
 
@@ -308,6 +359,13 @@ Dashboard
 
 <div class="main">
 
+<div class="sidebar">
+
+    <button id="newChatBtn">+ New Chat</button>
+
+    <div id="chatList"></div>
+
+</div>
 
 <div class="ai-panel">
 
@@ -600,6 +658,20 @@ function stopResponse(){
 }
 
 window.onload = loadChat;
+
+document.getElementById("newChatBtn").onclick = function(){
+
+    localStorage.removeItem("enterprise_chat");
+
+    document.getElementById("messages").innerHTML = `
+        <div class="message ai">
+            👋 Hello {{ username }}!<br>
+            I am your EnterpriseAI assistant.<br>
+            How can I help you today?
+        </div>
+    `;
+
+};
 
 </script>
 
