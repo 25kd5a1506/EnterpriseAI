@@ -10,7 +10,7 @@ client = Groq(
 )
 
 
-def ask_ai(prompt, model="llama-3.3-70b-versatile"):
+def ask_ai(prompt, model="llama-3.1-8b-instant"):
     try:
 
         response = client.chat.completions.create(

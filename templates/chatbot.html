@@ -322,6 +322,24 @@ button:hover{
 
 }
 
+.code-copy-btn{
+
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:6px 12px;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:12px;
+    margin-bottom:8px;
+
+}
+
+.code-copy-btn:hover{
+
+    background:#1d4ed8;
+
+}
 
 </style>
  
@@ -330,6 +348,7 @@ button:hover{
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+ 
 
 </head>
 
@@ -553,8 +572,11 @@ function typeWriter(){
         currentText += reply.charAt(index);
 
         aiMsg.innerHTML = marked.parse(currentText);
+  
+        aiMsg.querySelectorAll("pre code").forEach((block)=>{
+    hljs.highlightElement(block);
+});
 
-        hljs.highlightAll();
 
         index++;
 
@@ -563,22 +585,69 @@ function typeWriter(){
         setTimeout(typeWriter,20);
 
     }
+    
     else{
 
-        saveChat();
+  
 
-    }
+    saveChat();
+
+}
+
+}
+
+function addCopyButtons(){
+
+    document.querySelectorAll(".ai pre").forEach((pre)=>{
+
+        if(pre.querySelector(".code-copy-btn")){
+            return;
+        }
+
+        let button = document.createElement("button");
+
+        button.innerText = "📋 Copy Code";
+
+        button.className = "code-copy-btn";
+
+
+        button.onclick = function(){
+
+            let code = pre.querySelector("code").innerText;
+
+            navigator.clipboard.writeText(code);
+
+            button.innerText = "✅ Copied";
+
+            setTimeout(()=>{
+
+                button.innerText = "📋 Copy Code";
+
+            },2000);
+
+        };
+
+
+       pre.insertBefore(button, pre.firstChild);
+
+    });
 
 }
 
 typeWriter();
+
+setTimeout(()=>{
+
+    addCopyButtons();
+
+},500);
 
 
 let copyBtn = document.createElement("button");
 
 copyBtn.innerText = "📋 Copy";
 
-copyBtn.style.marginTop = "8px";
+copyBtn.className = "copy-btn";
 
 copyBtn.onclick = function(){
 
@@ -592,7 +661,8 @@ copyBtn.onclick = function(){
 
 };
 
-box.appendChild(copyBtn);
+
+
     }
     catch(error){
 
@@ -672,6 +742,108 @@ document.getElementById("newChatBtn").onclick = function(){
     `;
 
 };
+
+/* Markdown Code Style */
+
+.ai pre{
+
+    position:relative;
+
+    background:#020617;
+
+    padding:15px;
+
+    border-radius:12px;
+
+    overflow-x:auto;
+
+    margin-top:10px;
+
+}
+
+
+.ai code{
+
+    font-family:"Fira Code",monospace;
+
+    font-size:14px;
+
+}
+
+
+.ai h2,
+.ai h3{
+
+    margin-top:15px;
+
+    color:#00eaff;
+
+}
+
+
+.ai ul{
+
+    padding-left:25px;
+
+}
+
+
+.ai strong{
+
+    color:#00eaff;
+
+}
+
+.copy-btn{
+
+    width:auto;
+
+    padding:8px 15px;
+
+    margin-top:10px;
+
+    border-radius:8px;
+
+    background:#2563eb;
+
+    color:white;
+
+    font-size:14px;
+
+    cursor:pointer;
+
+}
+
+.code-copy-btn{
+
+    float:right;
+    margin-bottom:10px;
+    padding:6px 12px;
+    border:none;
+    border-radius:8px;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+    font-size:12px;
+    position:relative;
+    z-index:2;
+
+}
+
+   
+
+
+.code-copy-btn:hover{
+
+    background:#1d4ed8;
+
+}
+
+.copy-btn:hover{
+
+    background:#1d4ed8;
+
+}
 
 </script>
 
