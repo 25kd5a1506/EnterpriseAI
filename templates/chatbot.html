@@ -474,227 +474,173 @@ Send 🚀
 
 <script>
 
+
 let stopTyping = false;
 
 async function sendMessage(){
-    
+
     stopTyping = false;
 
-    let input = document.getElementById("message");
-    let text = input.value.trim();
+    const input = document.getElementById("message");
+    const text = input.value.trim();
 
     if(text === "") return;
 
-    let box = document.getElementById("messages");
+    const box = document.getElementById("messages");
 
-
-    let userMsg = document.createElement("div");
+    const userMsg = document.createElement("div");
     userMsg.className = "message user";
     userMsg.innerText = text;
     box.appendChild(userMsg);
 
-
     input.value = "";
 
-
-    // Typing animation
-    let loading = document.createElement("div");
+    const loading = document.createElement("div");
     loading.className = "message ai";
     loading.id = "loading";
-
+    loading.innerText = "🤖 Thinking...";
     box.appendChild(loading);
-
-
-    let dots = 0;
-
-    let typing = setInterval(()=>{
-
-        dots++;
-
-        if(dots > 3){
-            dots = 1;
-        }
-
-        loading.innerText = "🤖 Thinking" + ".".repeat(dots);
-
-    },400);
-
-
 
     box.scrollTop = box.scrollHeight;
 
-
     try{
 
-        let response = await fetch("/chat",{
-
+        const response = await fetch("/chat",{
             method:"POST",
-
             headers:{
                 "Content-Type":"application/json"
             },
-
             body:JSON.stringify({
                 message:text
             })
-
         });
 
-
-        let data = await response.json();
-
-
-        clearInterval(typing);
-
-        document.getElementById("loading").remove();
+        const data = await response.json();
 
 
-
-     let aiMsg = document.createElement("div");
-
-aiMsg.className = "message ai";
-
-box.appendChild(aiMsg);
-
-let reply = "🤖 " + data.reply;
-
-let index = 0;
-let currentText = "";
-
-function typeWriter(){
-
-    if(stopTyping){
-        return;
-    }
-
-    if(index < reply.length){
-
-        currentText += reply.charAt(index);
-
-        aiMsg.innerHTML = marked.parse(currentText);
-  
-        aiMsg.querySelectorAll("pre code").forEach((block)=>{
-    hljs.highlightElement(block);
-});
-
-
-        index++;
-
-        box.scrollTop = box.scrollHeight;
-
-        setTimeout(typeWriter,20);
-
-    }
-    
-    else{
-
-  
-
-    saveChat();
-
-}
-
-}
-
-function addCopyButtons(){
-
-    document.querySelectorAll(".ai pre").forEach((pre)=>{
-
-        if(pre.querySelector(".code-copy-btn")){
-            return;
+        const loadingDiv = document.getElementById("loading");
+        if(loadingDiv){
+            loadingDiv.remove();
         }
 
-        let button = document.createElement("button");
+        const aiMsg = document.createElement("div");
+        aiMsg.className = "message ai";
+        box.appendChild(aiMsg);
 
-        button.innerText = "📋 Copy Code";
+        const reply = "🤖 " + data.reply;
 
-        button.className = "code-copy-btn";
+        let index = 0;
+        let current = "";
 
+        function typeWriter(){
 
-        button.onclick = function(){
+            if(stopTyping) return;
 
-            let code = pre.querySelector("code").innerText;
+            if(index < reply.length){
 
-            navigator.clipboard.writeText(code);
+                current += reply.charAt(index);
 
-            button.innerText = "✅ Copied";
+                aiMsg.innerHTML = marked.parse(current);
 
-            setTimeout(()=>{
+                aiMsg.querySelectorAll("pre code").forEach((block)=>{
+                    hljs.highlightElement(block);
+                });
 
-                button.innerText = "📋 Copy Code";
+                index++;
 
-            },2000);
+                box.scrollTop = box.scrollHeight;
 
-        };
+                setTimeout(typeWriter,20);
 
+            }else{
 
-       pre.insertBefore(button, pre.firstChild);
+                saveChat();
 
-    });
+                addCopyButtons();
 
-}
+                const copyBtn = document.createElement("button");
 
-typeWriter();
+                copyBtn.className = "copy-btn";
+                copyBtn.innerText = "📋 Copy";
 
-setTimeout(()=>{
+                copyBtn.onclick = function(){
 
-    addCopyButtons();
+                    navigator.clipboard.writeText(data.reply);
 
-},500);
+                    copyBtn.innerText = "✅ Copied";
 
+                    setTimeout(()=>{
+                        copyBtn.innerText = "📋 Copy";
+                    },2000);
 
-let copyBtn = document.createElement("button");
+                };
 
-copyBtn.innerText = "📋 Copy";
+                aiMsg.appendChild(copyBtn);
 
-copyBtn.className = "copy-btn";
+            }
 
-copyBtn.onclick = function(){
+        }
 
-    navigator.clipboard.writeText(data.reply);
+        function addCopyButtons(){
 
-    copyBtn.innerText = "✅ Copied";
+            document.querySelectorAll(".ai pre").forEach((pre)=>{
 
-    setTimeout(()=>{
-        copyBtn.innerText = "📋 Copy";
-    },2000);
+                if(pre.querySelector(".code-copy-btn")) return;
 
-};
+                const btn = document.createElement("button");
 
+                btn.className = "code-copy-btn";
+                btn.innerText = "📋 Copy Code";
 
+                btn.onclick = function(){
 
-    }
+                    const code = pre.querySelector("code").innerText;
+
+                    navigator.clipboard.writeText(code);
+
+                    btn.innerText = "✅ Copied";
+
+                    setTimeout(()=>{
+                        btn.innerText = "📋 Copy Code";
+                    },2000);
+
+                };
+
+                pre.insertBefore(btn,pre.firstChild);
+
+            });
+
+        }
+
+        typeWriter();
+
+            }
     catch(error){
 
+        const loadingDiv = document.getElementById("loading");
 
-        clearInterval(typing);
+        if(loadingDiv){
+            loadingDiv.remove();
+        }
 
-        document.getElementById("loading").remove();
+        const box = document.getElementById("messages");
 
+        const errorMsg = document.createElement("div");
 
-        let errorMsg = document.createElement("div");
-
-        errorMsg.className="message ai";
-
-        errorMsg.innerText="❌ AI connection error";
-
+        errorMsg.className = "message ai";
+        errorMsg.innerText = "❌ AI connection error";
 
         box.appendChild(errorMsg);
 
     }
 
-
-
-    box.scrollTop = box.scrollHeight;
-
 }
-
-
-
 
 function checkEnter(event){
 
     if(event.key === "Enter"){
+
+        event.preventDefault();
 
         sendMessage();
 
@@ -713,7 +659,7 @@ function saveChat(){
 
 function loadChat(){
 
-    let history = localStorage.getItem("enterprise_chat");
+    const history = localStorage.getItem("enterprise_chat");
 
     if(history){
 
@@ -724,128 +670,39 @@ function loadChat(){
 }
 
 function stopResponse(){
+
     stopTyping = true;
+
 }
 
-window.onload = loadChat;
+window.onload = function(){
 
-document.getElementById("newChatBtn").onclick = function(){
+    loadChat();
 
-    localStorage.removeItem("enterprise_chat");
+    const btn = document.getElementById("newChatBtn");
 
-    document.getElementById("messages").innerHTML = `
-        <div class="message ai">
-            👋 Hello {{ username }}!<br>
-            I am your EnterpriseAI assistant.<br>
-            How can I help you today?
-        </div>
-    `;
+    if(btn){
+
+        btn.onclick = function(){
+
+            localStorage.removeItem("enterprise_chat");
+
+            document.getElementById("messages").innerHTML = `
+                <div class="message ai">
+                    👋 Hello {{ username }}!<br>
+                    I am your EnterpriseAI assistant.<br>
+                    How can I help you today?
+                </div>
+            `;
+
+        };
+
+    }
 
 };
 
-/* Markdown Code Style */
-
-.ai pre{
-
-    position:relative;
-
-    background:#020617;
-
-    padding:15px;
-
-    border-radius:12px;
-
-    overflow-x:auto;
-
-    margin-top:10px;
-
-}
-
-
-.ai code{
-
-    font-family:"Fira Code",monospace;
-
-    font-size:14px;
-
-}
-
-
-.ai h2,
-.ai h3{
-
-    margin-top:15px;
-
-    color:#00eaff;
-
-}
-
-
-.ai ul{
-
-    padding-left:25px;
-
-}
-
-
-.ai strong{
-
-    color:#00eaff;
-
-}
-
-.copy-btn{
-
-    width:auto;
-
-    padding:8px 15px;
-
-    margin-top:10px;
-
-    border-radius:8px;
-
-    background:#2563eb;
-
-    color:white;
-
-    font-size:14px;
-
-    cursor:pointer;
-
-}
-
-.code-copy-btn{
-
-    float:right;
-    margin-bottom:10px;
-    padding:6px 12px;
-    border:none;
-    border-radius:8px;
-    background:#2563eb;
-    color:white;
-    cursor:pointer;
-    font-size:12px;
-    position:relative;
-    z-index:2;
-
-}
-
-   
-
-
-.code-copy-btn:hover{
-
-    background:#1d4ed8;
-
-}
-
-.copy-btn:hover{
-
-    background:#1d4ed8;
-
-}
-
 </script>
+
 
 </body>
 </html>
