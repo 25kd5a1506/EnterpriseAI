@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 from ai_engine import ask_ai
-from models import db, User
+from models import db, User, ChatHistory, ChatSession
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from dotenv import load_dotenv
@@ -151,11 +151,6 @@ def logout():
 
     return redirect(url_for("login"))
 
-
-
-
-
-
 # ================= CHATBOT =================
 
 @app.route("/chatbot")
@@ -164,37 +159,140 @@ def chatbot():
     if "username" not in session:
         return redirect(url_for("login"))
 
+    return render_template(
+        "chatbot.html",
+        username=session["username"]
+    )
 
-    return render_template("chatbot.html")
-
-
-
-
+# ================= CHAT =================
 
 @app.route("/chat", methods=["POST"])
 def chat():
 
     data = request.get_json()
-
     message = data.get("message", "")
-
 
     reply = ask_ai(
         message,
         model=AI_MODEL
     )
 
+    if "username" in session:
+
+        user = User.query.filter_by(
+            username=session["username"]
+        ).first()
+
+        if user:
+
+            session_id = session.get("chat_session_id")
+
+            if not session_id:
+
+                new_session = ChatSession(
+                    user_id=user.id,
+                    title=message[:40]
+                )
+
+                db.session.add(new_session)
+                db.session.commit()
+
+                session["chat_session_id"] = new_session.id
+                session_id = new_session.id
+
+            chat = ChatHistory(
+                user_id=user.id,
+                session_id=session_id,
+                message=message,
+                response=reply
+            )
+
+            db.session.add(chat)
+            db.session.commit()
 
     return jsonify({
         "reply": reply
     })
 
 
+@app.route("/chat-sessions")
+def chat_sessions():
 
+    if "username" not in session:
+        return jsonify([])
 
+    user = User.query.filter_by(
+        username=session["username"]
+    ).first()
 
+    if not user:
+        return jsonify([])
 
+    sessions = ChatSession.query.filter_by(
+        user_id=user.id
+    ).order_by(
+        ChatSession.created_at.desc()
+    ).all()
 
+    return jsonify([
+        {
+            "id": s.id,
+            "title": s.title
+        }
+        for s in sessions
+    ])
+
+@app.route("/chat-history")
+def chat_history():
+
+    if "username" not in session:
+        return jsonify([])
+
+    user = User.query.filter_by(
+        username=session["username"]
+    ).first()
+
+    if not user:
+        return jsonify([])
+
+    session_id = session.get("chat_session_id")
+
+    if not session_id:
+        return jsonify([])
+    
+    query = ChatHistory.query.filter_by(
+        user_id=user.id
+    )
+
+    if session_id:
+        query = query.filter_by(
+            session_id=session_id
+        )
+
+    chats = query.order_by(
+        ChatHistory.created_at.asc()
+    ).all()
+
+    history = []
+
+    for chat in chats:
+        history.append({
+            "id": chat.id,
+            "message": chat.message,
+            "response": chat.response,
+            "created_at": str(chat.created_at)
+        })
+
+    return jsonify(history)
+
+@app.route("/new-chat", methods=["POST"])
+def new_chat():
+
+    session.pop("chat_session_id", None)
+
+    return jsonify({
+        "success": True
+    })
 
 # ================= EMAIL WRITER =================
 

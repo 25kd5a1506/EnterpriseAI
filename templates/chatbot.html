@@ -134,6 +134,34 @@ body{
 
 }
 
+.chat-item{
+
+    padding:12px;
+
+    background:rgba(255,255,255,0.08);
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    color:white;
+
+    transition:0.3s;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+}
+
+.chat-item:hover{
+
+    background:#2563eb;
+
+}
+
 /* AI Panel */
 
 .ai-panel{
@@ -322,18 +350,52 @@ button:hover{
 
 }
 
-.code-copy-btn{
+.ai pre{
 
-    background:#2563eb;
-    color:white;
-    border:none;
-    padding:6px 12px;
-    border-radius:6px;
-    cursor:pointer;
-    font-size:12px;
-    margin-bottom:8px;
+    position:relative;
+    background:#020617;
+    padding:20px;
+    border-radius:12px;
+    overflow:auto;
 
 }
+
+
+.code-copy-btn{
+
+    position:absolute;
+
+    top:10px;
+
+    right:10px;
+
+    background:rgba(255,255,255,0.12);
+
+    color:white;
+
+    border:1px solid rgba(255,255,255,0.2);
+
+    padding:5px 10px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-size:12px;
+
+    backdrop-filter:blur(8px);
+
+    transition:0.3s;
+
+}
+
+
+.code-copy-btn:hover{
+
+    background:#2563eb;
+
+}
+
 
 .code-copy-btn:hover{
 
@@ -554,29 +616,10 @@ async function sendMessage(){
 
             }else{
 
-                saveChat();
 
                 addCopyButtons();
 
-                const copyBtn = document.createElement("button");
-
-                copyBtn.className = "copy-btn";
-                copyBtn.innerText = "📋 Copy";
-
-                copyBtn.onclick = function(){
-
-                    navigator.clipboard.writeText(data.reply);
-
-                    copyBtn.innerText = "✅ Copied";
-
-                    setTimeout(()=>{
-                        copyBtn.innerText = "📋 Copy";
-                    },2000);
-
-                };
-
-                aiMsg.appendChild(copyBtn);
-
+                
             }
 
         }
@@ -675,29 +718,82 @@ function stopResponse(){
 
 }
 
-window.onload = function(){
+async function loadChatHistory() {
 
-    loadChat();
+    const response = await fetch("/chat-history?current=1");
+    const chats = await response.json();
+
+    const box = document.getElementById("messages");
+
+    // Welcome message first
+    box.innerHTML = `
+        <div class="message ai">
+            👋 Hello {{ username }}!<br>
+            I am your EnterpriseAI assistant.<br>
+            How can I help you today?
+        </div>
+    `;
+
+    chats.reverse().forEach(chat => {
+
+        box.innerHTML += `
+            <div class="message user">
+                ${chat.message}
+            </div>
+
+            <div class="message ai">
+                ${marked.parse(chat.response)}
+            </div>
+        `;
+
+    });
+
+    box.scrollTop = box.scrollHeight;
+
+}
+
+window.onload = async function () {
+
+    const list = document.getElementById("chatList");
+
+const res = await fetch("/chat-sessions");
+const sessions = await res.json();
+
+list.innerHTML = "";
+
+sessions.forEach(chat => {
+
+    const item = document.createElement("div");
+
+    item.className = "chat-item";
+
+    item.innerText = "💬 " + chat.title;
+
+    list.appendChild(item);
+
+});
+
+    await loadChatHistory();
 
     const btn = document.getElementById("newChatBtn");
 
-    if(btn){
+btn.onclick = async function () {
 
-        btn.onclick = function(){
+    await fetch("/new-chat", {
+        method: "POST"
+    });
 
-            localStorage.removeItem("enterprise_chat");
+    document.getElementById("messages").innerHTML = `
+        <div class="message ai">
+            👋 Hello {{ username }}!<br>
+            I am your EnterpriseAI assistant.<br>
+            How can I help you today?
+        </div>
+    `;
 
-            document.getElementById("messages").innerHTML = `
-                <div class="message ai">
-                    👋 Hello {{ username }}!<br>
-                    I am your EnterpriseAI assistant.<br>
-                    How can I help you today?
-                </div>
-            `;
+    await loadChatHistory();
 
-        };
-
-    }
+};
 
 };
 
