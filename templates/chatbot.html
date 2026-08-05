@@ -850,52 +850,82 @@ window.onload = async function () {
 
     const list = document.getElementById("chatList");
 
-const res = await fetch("/chat-sessions");
-const sessions = await res.json();
+    const res = await fetch("/chat-sessions");
 
-list.innerHTML = "";
+    const sessions = await res.json();
 
-sessions.forEach(chat => {
+    list.innerHTML = "";
 
-    const item = document.createElement("div");
 
-    item.className = "chat-item";
+    sessions.forEach(chat => {
 
-    item.innerText = "💬 " + chat.title;
+        const item = document.createElement("div");
+        item.className = "chat-item";
 
-    item.onclick = async function () {
 
-        await fetch("/select-chat/" + chat.id);
+        const title = document.createElement("span");
+        title.innerText = "💬 " + chat.title;
 
-        await loadChatHistory();
 
-    };
+        title.onclick = async function(){
 
-    list.appendChild(item);
+            await fetch("/select-chat/" + chat.id);
 
-});
+            await loadChatHistory();
+
+        };
+
+
+        const del = document.createElement("span");
+
+        del.innerHTML = "🗑️";
+
+        del.className = "delete-chat";
+
+
+        del.onclick = async function(e){
+
+            e.stopPropagation();
+
+            if(!confirm("Delete this chat?")) return;
+
+
+            await fetch("/delete-chat/" + chat.id,{
+                method:"POST"
+            });
+
+
+            location.reload();
+
+        };
+
+
+        item.appendChild(title);
+
+        item.appendChild(del);
+
+
+        list.appendChild(item);
+
+    });
+
 
     await loadChatHistory();
+
 
     const btn = document.getElementById("newChatBtn");
 
-btn.onclick = async function () {
 
-    await fetch("/new-chat", {
-        method: "POST"
-    });
+    btn.onclick = async function(){
 
-    document.getElementById("messages").innerHTML = `
-        <div class="message ai">
-            👋 Hello {{ username }}!<br>
-            I am your EnterpriseAI assistant.<br>
-            How can I help you today?
-        </div>
-    `;
+        await fetch("/new-chat",{
+            method:"POST"
+        });
 
-    await loadChatHistory();
 
-};
+        location.reload();
+
+    };
 
 };
 
