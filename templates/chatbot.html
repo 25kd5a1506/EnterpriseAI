@@ -592,6 +592,14 @@ sessions.forEach(chat => {
     item.className = "chat-item";
 
     item.innerText = "💬 " + chat.title;
+    
+    item.onclick = async function () {
+
+    await fetch("/select-chat/" + chat.id);
+
+    await loadChatHistory();
+
+};
 
     list.appendChild(item);
 

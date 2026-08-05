@@ -294,6 +294,15 @@ def new_chat():
         "success": True
     })
 
+@app.route("/select-chat/<int:session_id>")
+def select_chat(session_id):
+
+    session["chat_session_id"] = session_id
+
+    return jsonify({
+        "success": True
+    })
+
 # ================= EMAIL WRITER =================
 
 @app.route("/email-writer")
