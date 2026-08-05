@@ -794,6 +794,14 @@ sessions.forEach(chat => {
 
     item.innerText = "💬 " + chat.title;
 
+    item.onclick = async function () {
+
+        await fetch("/select-chat/" + chat.id);
+
+        await loadChatHistory();
+
+    };
+
     list.appendChild(item);
 
 });
