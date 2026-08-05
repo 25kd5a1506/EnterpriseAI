@@ -303,6 +303,29 @@ def select_chat(session_id):
         "success": True
     })
 
+@app.route("/delete-chat/<int:session_id>", methods=["POST"])
+def delete_chat(session_id):
+
+    if "username" not in session:
+        return jsonify({"success": False})
+
+    ChatHistory.query.filter_by(
+        session_id=session_id
+    ).delete()
+
+    ChatSession.query.filter_by(
+        id=session_id
+    ).delete()
+
+    db.session.commit()
+
+    if session.get("chat_session_id") == session_id:
+        session.pop("chat_session_id", None)
+
+    return jsonify({
+        "success": True
+    })
+
 # ================= EMAIL WRITER =================
 
 @app.route("/email-writer")

@@ -588,18 +588,53 @@ list.innerHTML = "";
 sessions.forEach(chat => {
 
     const item = document.createElement("div");
-
     item.className = "chat-item";
 
-    item.innerText = "💬 " + chat.title;
-    
-    item.onclick = async function () {
 
-    await fetch("/select-chat/" + chat.id);
+    const title = document.createElement("span");
+    title.innerText = "💬 " + chat.title;
 
-    await loadChatHistory();
 
-};
+    title.onclick = async function () {
+
+        await fetch("/select-chat/" + chat.id);
+
+        await loadChatHistory();
+
+    };
+
+
+    const del = document.createElement("span");
+
+    del.innerHTML = "🗑️";
+
+    del.className = "delete-chat";
+
+
+    del.onclick = async function (e) {
+
+        e.stopPropagation();
+
+
+        if(!confirm("Delete this chat?")) return;
+
+
+        await fetch("/delete-chat/" + chat.id,{
+
+            method:"POST"
+
+        });
+
+
+        location.reload();
+
+    };
+
+
+    item.appendChild(title);
+
+    item.appendChild(del);
+
 
     list.appendChild(item);
 
