@@ -148,17 +148,51 @@ body{
 
     transition:0.3s;
 
-    white-space:nowrap;
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:10px;
+
+}
+
+
+.chat-item span:first-child{
 
     overflow:hidden;
+
+    white-space:nowrap;
 
     text-overflow:ellipsis;
 
 }
 
+
 .chat-item:hover{
 
     background:#2563eb;
+
+}
+
+
+.delete-chat{
+
+    cursor:pointer;
+
+    opacity:0.7;
+
+    font-size:14px;
+
+}
+
+
+.delete-chat:hover{
+
+    opacity:1;
+
+    transform:scale(1.2);
 
 }
 
