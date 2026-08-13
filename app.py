@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 from ai_engine import ask_ai
-from models import db, User, ChatHistory, ChatSession
+from models import db, User, ChatHistory, ChatSession, APIKey
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from dotenv import load_dotenv
+import secrets
 import os
 
 load_dotenv()
@@ -590,7 +591,115 @@ Data:
         "analysis": reply
     })
 
+# ================= ENTERPRISEAI API =================
+@app.route("/api/generate-key", methods=["POST"])
+def generate_api_key():
 
+    username = session.get("username")
+
+    if not username:
+        return jsonify({
+            "success": False,
+            "message": "Login required"
+        }), 401
+
+    user = User.query.filter_by(username=username).first()
+
+    if not user:
+        return jsonify({
+            "success": False,
+            "message": "User not found"
+        }), 404
+
+    api_key = "EAI-" + secrets.token_urlsafe(32)
+
+    new_key = APIKey(
+        user_id=user.id,
+        api_key=api_key
+    )
+
+    db.session.add(new_key)
+    db.session.commit()
+
+    return jsonify({
+        "success": True,
+        "api_key": api_key
+    })
+
+@app.route("/api/test", methods=["GET"])
+def test_api():
+
+    api_key = request.headers.get("X-API-Key")
+
+    if not api_key:
+        return jsonify({
+            "success": False,
+            "message": "API key required"
+        }), 401
+
+    key = APIKey.query.filter_by(api_key=api_key).first()
+
+    if not key:
+        return jsonify({
+            "success": False,
+            "message": "Invalid API key"
+        }), 401
+
+    return jsonify({
+        "success": True,
+        "message": "EnterpriseAI API is working"
+    })
+
+# ================= REAL ENTERPRISEAI API =================
+
+@app.route("/api/chat", methods=["POST"])
+def api_chat():
+
+    api_key = request.headers.get("X-API-Key")
+
+    if not api_key:
+        return jsonify({
+            "success": False,
+            "message": "API key required"
+        }), 401
+
+    key = APIKey.query.filter_by(api_key=api_key).first()
+
+    if not key:
+        return jsonify({
+            "success": False,
+            "message": "Invalid API key"
+        }), 401
+
+    data = request.get_json()
+
+    if not data or not data.get("message"):
+        return jsonify({
+            "success": False,
+            "message": "Message is required"
+        }), 400
+
+    message = data.get("message")
+
+    reply = ask_ai(
+        message,
+        model=AI_MODEL
+    )
+
+    return jsonify({
+        "success": True,
+        "reply": reply
+    })
+
+# ================= API DOCUMENTATION =================
+
+@app.route("/api-docs")
+def api_docs():
+
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    return render_template("api_docs.html")
 
 # ================= START APP =================
 
@@ -598,10 +707,13 @@ print(app.url_map)
 
 if __name__ == "__main__":
 
-
     with app.app_context():
-
         db.create_all()
 
+    app.run(
+        host="127.0.0.1",
+        port=5000,
+        debug=True
+    )
 
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    

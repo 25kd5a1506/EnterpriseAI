@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>EnterpriseAI API Documentation</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                linear-gradient(135deg, #020617, #0f172a, #1e3a8a);
+            color: white;
+        }
+
+        .header {
+            padding: 22px 40px;
+            background: rgba(2, 6, 23, 0.85);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .header h1 {
+            font-size: 28px;
+        }
+
+        .header p {
+            margin-top: 6px;
+            color: #94a3b8;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 35px auto;
+        }
+
+        .card {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+        }
+
+        .card h2 {
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: #cbd5e1;
+            line-height: 1.7;
+        }
+
+        .endpoint {
+            margin-top: 20px;
+            padding: 18px;
+            background: #020617;
+            border-radius: 12px;
+            border-left: 4px solid #38bdf8;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 6px;
+            background: #2563eb;
+            font-weight: bold;
+            font-size: 13px;
+            margin-right: 10px;
+        }
+
+        .url {
+            font-family: Consolas, monospace;
+            color: #7dd3fc;
+        }
+
+        pre {
+            margin-top: 15px;
+            padding: 18px;
+            background: #000814;
+            border-radius: 10px;
+            overflow-x: auto;
+            color: #dbeafe;
+            line-height: 1.6;
+        }
+
+        code {
+            font-family: Consolas, monospace;
+        }
+
+        .warning {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(234, 179, 8, 0.12);
+            border: 1px solid rgba(234, 179, 8, 0.35);
+            border-radius: 10px;
+            color: #fde68a;
+        }
+
+        .success {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(34, 197, 94, 0.12);
+            border: 1px solid rgba(34, 197, 94, 0.35);
+            border-radius: 10px;
+            color: #bbf7d0;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 18px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+
+        .back-btn:hover {
+            background: #1d4ed8;
+        }
+
+        @media (max-width: 700px) {
+
+            .header {
+                padding: 20px;
+            }
+
+            .container {
+                width: 94%;
+            }
+
+            .card {
+                padding: 18px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="header">
+
+        <h1>🤖 EnterpriseAI API</h1>
+
+        <p>Developer Documentation</p>
+
+    </div>
+
+
+    <div class="container">
+
+        <!-- Introduction -->
+
+        <div class="card">
+
+            <h2>📘 Introduction</h2>
+
+            <p>
+                EnterpriseAI provides an authenticated API that allows
+                applications to communicate with the EnterpriseAI platform
+                using a secure API key.
+            </p>
+
+            <div class="success">
+                API authentication is performed using the
+                <strong>X-API-Key</strong> request header.
+            </div>
+
+        </div>
+
+
+        <!-- Authentication -->
+
+        <div class="card">
+
+            <h2>🔐 Authentication</h2>
+
+            <p>
+                Every protected API request must include a valid
+                EnterpriseAI API key.
+            </p>
+
+            <pre><code>X-API-Key: EAI-YOUR-API-KEY</code></pre>
+
+            <div class="warning">
+                Never share your API key publicly or expose it in
+                client-side source code.
+            </div>
+
+        </div>
+
+
+        <!-- Generate Key -->
+
+        <div class="card">
+
+            <h2>🔑 Generate API Key</h2>
+
+            <div class="endpoint">
+
+                <span class="method">POST</span>
+
+                <span class="url">/api/generate-key</span>
+
+                <p style="margin-top: 12px;">
+                    Generates a new EnterpriseAI API key for the
+                    currently authenticated user.
+                </p>
+
+                <pre><code>POST /api/generate-key</code></pre>
+
+                <h3>Example Response</h3>
+
+                <pre><code>{
+    "success": true,
+    "api_key": "EAI-xxxxxxxxxxxxxxxx"
+}</code></pre>
+
+            </div>
+
+        </div>
+
+
+        <!-- Test API -->
+
+        <div class="card">
+
+            <h2>🧪 Test API</h2>
+
+            <div class="endpoint">
+
+                <span class="method">GET</span>
+
+                <span class="url">/api/test</span>
+
+                <p style="margin-top: 12px;">
+                    Checks whether the supplied API key is valid and
+                    confirms that the EnterpriseAI API is working.
+                </p>
+
+                <pre><code>fetch("/api/test", {
+    method: "GET",
+    headers: {
+        "X-API-Key": "EAI-YOUR-API-KEY"
+    }
+})
+.then(response =&gt; response.json())
+.then(data =&gt; console.log(data));</code></pre>
+
+                <h3>Successful Response</h3>
+
+                <pre><code>{
+    "success": true,
+    "message": "EnterpriseAI API is working"
+}</code></pre>
+
+            </div>
+
+        </div>
+
+
+        <!-- Chat API -->
+
+        <div class="card">
+
+            <h2>💬 Chat API</h2>
+
+            <div class="endpoint">
+
+                <span class="method">POST</span>
+
+                <span class="url">/api/chat</span>
+
+                <p style="margin-top: 12px;">
+                    Sends a message to the EnterpriseAI backend and
+                    returns the generated AI response.
+                </p>
+
+                <h3 style="margin-top: 18px;">
+                    Request
+                </h3>
+
+                <pre><code>fetch("/api/chat", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+        "X-API-Key": "EAI-YOUR-API-KEY"
+    },
+    body: JSON.stringify({
+        message: "Say hello"
+    })
+})
+.then(response =&gt; response.json())
+.then(data =&gt; console.log(data));</code></pre>
+
+
+                <h3>Successful Response</h3>
+
+                <pre><code>{
+    "success": true,
+    "reply": "Hello! How can I help you?"
+}</code></pre>
+
+            </div>
+
+        </div>
+
+
+        <!-- Error Codes -->
+
+        <div class="card">
+
+            <h2>⚠️ Error Responses</h2>
+
+            <div class="endpoint">
+
+                <h3>Missing API Key</h3>
+
+                <pre><code>{
+    "success": false,
+    "message": "API key required"
+}</code></pre>
+
+
+                <h3 style="margin-top: 20px;">
+                    Invalid API Key
+                </h3>
+
+                <pre><code>{
+    "success": false,
+    "message": "Invalid API key"
+}</code></pre>
+
+            </div>
+
+        </div>
+
+
+        <!-- Footer -->
+
+        <div class="card">
+
+            <h2>🚀 EnterpriseAI API</h2>
+
+            <p>
+                Build applications and services using the
+                EnterpriseAI platform API.
+            </p>
+
+            <a href="/dashboard" class="back-btn">
+                ← Back to Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
