@@ -1,7 +1,16 @@
-﻿import requests
+﻿import os
+
+import requests
+from groq import Groq
 
 OLLAMA_URL = "http://127.0.0.1:11434/api/generate"
-AI_MODEL = "qwen3:8b"
+OLLAMA_MODEL = os.getenv("AI_MODEL", "qwen3:8b")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+AI_PROVIDER = os.getenv(
+    "AI_PROVIDER",
+    "groq" if GROQ_API_KEY else "ollama"
+).lower()
 
 SYSTEM_PROMPT = """
 You are EnterpriseAI, an intelligent enterprise productivity assistant.
@@ -40,14 +49,12 @@ STYLE:
 """
 
 
-def ask_ai(prompt, model=AI_MODEL):
+def ask_ai(prompt, model=None):
 
     if not prompt or not str(prompt).strip():
         return "Please enter a valid prompt."
 
-    try:
-
-        full_prompt = f"""
+    full_prompt = f"""
 {SYSTEM_PROMPT}
 
 User Question:
@@ -56,16 +63,35 @@ User Question:
 EnterpriseAI Response:
 """
 
+    if AI_PROVIDER == "groq":
+        if not GROQ_API_KEY:
+            return "AI Error: GROQ_API_KEY is missing."
+
+        try:
+            client = Groq(api_key=GROQ_API_KEY)
+            response = client.chat.completions.create(
+                model=GROQ_MODEL,
+                messages=[
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "user", "content": str(prompt)}
+                ],
+                temperature=0.7,
+                max_tokens=256
+            )
+            reply = response.choices[0].message.content.strip()
+            return reply or "AI Error: Empty response from Groq."
+        except Exception as e:
+            return f"AI Error: {str(e)}"
+
+    try:
         response = requests.post(
             OLLAMA_URL,
             json={
-    "model": model,
-    "prompt": full_prompt,
-    "stream": False,
-    "options": {
-        "num_predict": 256
-    }
-},
+                "model": model or OLLAMA_MODEL,
+                "prompt": full_prompt,
+                "stream": False,
+                "options": {"num_predict": 256}
+            },
             timeout=300
         )
 
