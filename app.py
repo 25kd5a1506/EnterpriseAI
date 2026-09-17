@@ -169,8 +169,44 @@ def chat():
     data = request.get_json()
     message = data.get("message", "")
 
+    if not message.strip():
+        return jsonify({"reply": "Please enter a message."}), 400
+
+    conversation = []
+
+    if "username" in session:
+        user = User.query.filter_by(
+            username=session["username"]
+        ).first()
+
+        if user:
+            session_id = session.get("chat_session_id")
+
+            if session_id:
+                previous_chats = ChatHistory.query.filter_by(
+                    user_id=user.id,
+                    session_id=session_id
+                ).order_by(
+                    ChatHistory.created_at.asc()
+                ).all()
+
+                for previous_chat in previous_chats:
+                    conversation.append(
+                        f"User: {previous_chat.message}\n"
+                        f"Assistant: {previous_chat.response}"
+                    )
+
+    prompt = message
+
+    if conversation:
+        prompt = (
+            "Continue this conversation and use its context.\n\n"
+            + "\n\n".join(conversation)
+            + f"\n\nUser: {message}\nAssistant:"
+        )
+
     reply = ask_ai(
-        message,
+        prompt,
         model=AI_MODEL
     )
 
