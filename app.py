@@ -107,10 +107,6 @@ def register():
     return render_template("register.html")
 
 
-
-
-
-
 # ================= DASHBOARD =================
 
 @app.route("/dashboard")

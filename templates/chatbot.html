@@ -611,7 +611,15 @@ async function sendMessage(){
             })
         });
 
+        if(!response.ok){
+            throw new Error(`Chat request failed (${response.status})`);
+        }
+
         const data = await response.json();
+
+        if(!data.reply){
+            throw new Error("The AI returned an empty response");
+        }
 
         const res = await fetch("/chat-sessions");
 const sessions = await res.json();
@@ -696,11 +704,7 @@ sessions.forEach(chat => {
 
                 current += reply.charAt(index);
 
-                aiMsg.innerHTML = marked.parse(current);
-
-                aiMsg.querySelectorAll("pre code").forEach((block)=>{
-                    hljs.highlightElement(block);
-                });
+                aiMsg.textContent = current;
 
                 index++;
 
@@ -710,6 +714,15 @@ sessions.forEach(chat => {
 
             }else{
 
+                if(window.marked){
+                    aiMsg.innerHTML = marked.parse(current);
+                }
+
+                if(window.hljs){
+                    aiMsg.querySelectorAll("pre code").forEach((block)=>{
+                        hljs.highlightElement(block);
+                    });
+                }
 
                 addCopyButtons();
 
@@ -765,7 +778,7 @@ sessions.forEach(chat => {
         const errorMsg = document.createElement("div");
 
         errorMsg.className = "message ai";
-        errorMsg.innerText = "❌ AI connection error";
+        errorMsg.innerText = `❌ ${error.message || "AI connection error"}`;
 
         box.appendChild(errorMsg);
 
