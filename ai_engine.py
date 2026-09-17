@@ -5,7 +5,7 @@ from groq import Groq
 
 OLLAMA_URL = "http://127.0.0.1:11434/api/generate"
 OLLAMA_MODEL = os.getenv("AI_MODEL", "qwen3:8b")
-GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-20b")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 AI_PROVIDER = os.getenv(
     "AI_PROVIDER",
