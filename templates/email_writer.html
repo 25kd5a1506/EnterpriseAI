@@ -2,7 +2,8 @@
 <html>
 
 <head>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EnterpriseAI Mail Assistant</title>
 
 <style>
@@ -252,14 +253,45 @@ color:white;
 
 
 
-@media(max-width:900px){
+@media (max-width: 900px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 18px 20px;
+    }
 
-.workspace{
+    .logo {
+        font-size: 24px;
+    }
 
-grid-template-columns:1fr;
+    .title {
+        padding: 20px 16px 8px;
+    }
 
-}
+    .title h1 {
+        font-size: 32px;
+    }
 
+    .workspace {
+        grid-template-columns: 1fr;
+        padding: 18px 16px 22px;
+        gap: 18px;
+    }
+
+    .panel {
+        padding: 20px 16px;
+    }
+
+    input, select, textarea {
+        font-size: 14px;
+        padding: 12px 13px;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px 18px;
+    }
 }
 
 </style>

@@ -2,7 +2,8 @@
 <html>
 
 <head>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EnterpriseAI Login</title>
 
 <style>
@@ -17,7 +18,7 @@ font-family:"Segoe UI",Arial,sans-serif;
 
 body{
 
-height:100vh;
+min-height:100vh;
 
 display:flex;
 
@@ -29,6 +30,8 @@ background:#020617;
 
 color:white;
 
+padding:20px;
+
 }
 
 
@@ -37,7 +40,7 @@ color:white;
 
 .login-card{
 
-width:380px;
+width:min(100%, 380px);
 
 background:#111827;
 
@@ -216,6 +219,35 @@ margin-top:20px;
 
 color:#94a3b8;
 
+}
+
+@media (max-width: 480px) {
+    .login-card {
+        padding: 24px 18px;
+        border-radius: 18px;
+    }
+
+    .ai-icon {
+        font-size: 38px;
+    }
+
+    .logo {
+        font-size: 28px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+    }
+
+    input {
+        padding: 12px 13px;
+        margin-bottom: 16px;
+    }
+
+    button {
+        padding: 12px 14px;
+        font-size: 15px;
+    }
 }
 
 

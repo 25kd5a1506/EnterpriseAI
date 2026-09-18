@@ -2,7 +2,8 @@
 <html>
 
 <head>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EnterpriseAI Translator</title>
 
 <style>
@@ -393,14 +394,65 @@ cursor:pointer;
 
 
 
-@media(max-width:900px){
+@media (max-width: 900px) {
+    .header {
+        height: auto;
+        padding: 16px 20px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
 
-.translator{
+    .logo {
+        font-size: 22px;
+    }
 
-grid-template-columns:1fr;
+    .hero {
+        padding: 24px 16px 12px;
+    }
 
-}
+    .hero h1 {
+        font-size: 32px;
+    }
 
+    .globe {
+        font-size: 60px;
+    }
+
+    .translator {
+        grid-template-columns: 1fr;
+        padding: 18px 16px 24px;
+        gap: 18px;
+    }
+
+    .card {
+        padding: 18px;
+    }
+
+    .card h2 {
+        font-size: 20px;
+        margin-bottom: 12px;
+    }
+
+    select, textarea {
+        padding: 12px 13px;
+    }
+
+    textarea {
+        height: 160px;
+    }
+
+    .translate, .copy {
+        width: 100%;
+        margin: 16px auto 0;
+    }
+
+    .flow {
+        padding: 8px 0;
+    }
+
+    .arrow {
+        font-size: 36px;
+    }
 }
 
 </style>

@@ -2,7 +2,8 @@
 <html>
 
 <head>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EnterpriseAI Chatbot</title>
 
 <style>
@@ -435,6 +436,75 @@ button:hover{
 
     background:#1d4ed8;
 
+}
+
+@media (max-width: 900px) {
+    body {
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .header {
+        height: auto;
+        padding: 16px 20px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .logo {
+        font-size: 22px;
+    }
+
+    .main {
+        display: block;
+        height: auto;
+    }
+
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding: 16px;
+    }
+
+    .ai-panel {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,0.15);
+        padding: 24px 16px;
+    }
+
+    .robot {
+        font-size: 72px;
+    }
+
+    .chat-area {
+        width: 100%;
+    }
+
+    .messages {
+        padding: 18px 16px;
+    }
+
+    .message {
+        max-width: 90%;
+        padding: 12px 14px;
+    }
+
+    .input-box {
+        padding: 14px 16px 18px;
+        gap: 10px;
+    }
+
+    input {
+        font-size: 14px;
+        padding: 12px 14px;
+    }
+
+    button {
+        width: 100px;
+        padding: 12px 10px;
+    }
 }
 
 </style>
